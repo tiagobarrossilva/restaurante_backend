@@ -29,7 +29,6 @@ module.exports = class UsuarioControllers{
             return res.status(404).json({message: 'informe o tipo'})
         }
 
-        // const usuarioExistente = await Usuario.findOne({_id: id}).lean()
         const usuarioExistente = await Usuario.findById(id).lean()
 
         if(usuarioExistente){
