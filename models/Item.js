@@ -2,7 +2,7 @@ const mongoose = require('../db/conn')
 const {Schema} = mongoose
 
 const Item = mongoose.model(
-    'usuario',
+    'item',
     new Schema({
         _id: {type: Number, require:true},
         nome: {type: String, required:true},

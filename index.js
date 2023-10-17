@@ -20,7 +20,7 @@ app.use(express.static('public'))
 
 // rotas
 const UsuarioRoutes = require('./routes/UsuarioRoutes')
-const ItemRoutes = require('./routes/UsuarioRoutes')
+const ItemRoutes = require('./routes/ItemRoutes')
 app.use('/usuario',UsuarioRoutes)
 app.use('/item',ItemRoutes)
 

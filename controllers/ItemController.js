@@ -25,12 +25,22 @@ module.exports = class ItemControllers{
             return res.status(404).json({message: 'informe o tipo'})
         }
 
+        if(Number.isNaN(preco)){
+            return res.status(404).json({message: 'preço invalido'})
+        }
+
+        if(Number.isNaN(tipo)){
+            return res.status(404).json({message: 'tipo invalido'})
+        }
+
+        const itemExistente = await Item.findById(id).lean()
+
+        if(itemExistente){
+            return res.status(404).json({message: 'Já existe um item com esse número, escolha outro'})
+        }
+
         const precoVerificado = parseFloat(preco)
         const tipoVerificado = parseInt(tipo)
-
-        if(Number.isNaN(precoVerificado || Number.isNaN(tipoVerificado))){
-            return res.status(404).json({message: 'ocorreu um erro, verifique os campos digitados'})
-        }
 
         const objItem = new Item({
             _id: id,
@@ -47,4 +57,5 @@ module.exports = class ItemControllers{
             return res.status(400).json({message: error})
         }
     }
+    
 }
