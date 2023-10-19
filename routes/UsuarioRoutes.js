@@ -6,7 +6,7 @@ const UsuarioController = require('../controllers/UsuarioController')
 const verificarToken = require('../helpers/verify-token')
 const apenasAdministrador = require('../helpers/acesso-apenas-administrador')
 
-router.post('/adicionar', UsuarioController.adicionarUsuario)
+router.post('/adicionar',verificarToken, UsuarioController.adicionarUsuario)
 router.post('/logar',UsuarioController.logarUsuario)
 router.get('/consultar/:id',UsuarioController.consultarUsuario)
 router.get('/consultar',UsuarioController.consultarTodosUsuarios)

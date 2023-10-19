@@ -57,5 +57,10 @@ module.exports = class ItemControllers{
             return res.status(400).json({message: error})
         }
     }
+
+    // fazendo
+    static async consultarItens(){
+        const itens = Item.find().lean()
+    }
     
 }
