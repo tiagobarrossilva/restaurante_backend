@@ -58,9 +58,9 @@ module.exports = class ItemControllers{
         }
     }
 
-    // fazendo
-    static async consultarItens(){
-        const itens = Item.find().lean()
+    static async consultarItens(req,res){
+        const itens = await Item.find().lean().select('-createdAt').select('-updatedAt').select('-__v')
+        return res.status(200).json({itens})
     }
     
 }

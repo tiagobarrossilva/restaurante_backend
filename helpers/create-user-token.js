@@ -9,7 +9,7 @@ const criarToken = async(usuarioExistente,req,res) =>{
         "nossosecret"
     )
 
-    res.status(200).json({
+    return res.status(200).json({
         token: token,
         tipo: usuarioExistente.tipo,
         nome: usuarioExistente.nome

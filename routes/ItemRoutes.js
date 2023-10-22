@@ -6,6 +6,7 @@ const ItemController = require('../controllers/ItemController')
 const verificarToken = require('../helpers/verify-token')
 const apenasAdministrador = require('../helpers/acesso-apenas-administrador')
 
-router.post('/',verificarToken,apenasAdministrador, ItemController.adicionarItem)
+router.post('/',ItemController.adicionarItem)
+router.get('/',ItemController.consultarItens)
 
 module.exports = router

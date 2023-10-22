@@ -6,9 +6,9 @@ const createUserToken = require('../helpers/create-user-token')
 
 module.exports = class UsuarioControllers{
     
-    static verificarUsuarioLogado(req,res){
-        res.json(req.usuario)
-    }
+    // static verificarUsuarioLogado(req,res){
+    //     res.json(req.usuario)
+    // }
 
     static async adicionarUsuario(req,res){
         const id = req.body.id
@@ -58,48 +58,44 @@ module.exports = class UsuarioControllers{
         const senha = req.body.senha
 
         if(!id){
-            res.status(422).json({message: 'digite o id de usuario'})
-            return
+            return res.status(422).json({message: 'digite o id de usuario'})
         }
 
         if(!senha){
-            res.status(422).json({message: 'digite a senha'})
-            return
+            return res.status(422).json({message: 'digite a senha'})
         }
 
-        const usuarioExistente = await Usuario.findOne({_id: id}).lean()
+        const usuarioExistente = await Usuario.findById(id)
 
         if(usuarioExistente){
-            
+
             const verificarSenha = bcrypt.compareSync(senha, usuarioExistente.senha)
 
             if(verificarSenha){
                 await createUserToken(usuarioExistente,req,res)
                 return
             } else {
-                res.status(422).json({message: 'senha incorreta'})
-                return
+                return res.status(422).json({message: 'senha incorreta'})
             }
 
         } else{
-            res.status(422).json({message: 'id não encontrado'})
-            return
+            return res.status(422).json({message: 'id não encontrado'})
         }
     }
 
-    static async consultarUsuario(req,res){
-        const id = req.params.id
+    // static async consultarUsuario(req,res){
+    //     const id = req.params.id
 
-        const usuarioExistente = await Usuario.findById(id).select('-senha')
+    //     const usuarioExistente = await Usuario.findById(id).select('-senha')
 
-        if(usuarioExistente){
-            res.json(usuarioExistente)
-            return
-        } else{
-            res.json({message: 'usuario não encontrado'})
-            return
-        }
-    }
+    //     if(usuarioExistente){
+    //         res.json(usuarioExistente)
+    //         return
+    //     } else{
+    //         res.json({message: 'usuario não encontrado'})
+    //         return
+    //     }
+    // }
 
     static async consultarTodosUsuarios(req,res){
         const todosUsuarios = await Usuario.find().select('-senha')
@@ -113,42 +109,39 @@ module.exports = class UsuarioControllers{
         }
     }
 
-    static async editarUsuario(req,res){
-        const id = req.params.id
-        const nome = req.body.nome
-        const tipo = req.body.tipo
+    // static async editarUsuario(req,res){
+    //     const id = req.params.id
+    //     const nome = req.body.nome
+    //     const tipo = req.body.tipo
 
-        const usuarioAtualizado = {nome,tipo}
+    //     const usuarioAtualizado = {nome,tipo}
 
-        try{
-            const objUsuario = await Usuario.findOneAndUpdate(
-                { _id: id },
-                { $set: usuarioAtualizado },
-                { new: true },
-                )
-            if(objUsuario){
-                res.json({message: 'usuario atualizado'})
-                return
-            } else{
-                res.status(200).json({objUsuario})
-                return
-            }
+    //     try{
+    //         const objUsuario = await Usuario.findOneAndUpdate(
+    //             { _id: id },
+    //             { $set: usuarioAtualizado },
+    //             { new: true },
+    //             )
+    //         if(objUsuario){
+    //             res.json({message: 'usuario atualizado'})
+    //             return
+    //         } else{
+    //             res.status(200).json({objUsuario})
+    //             return
+    //         }
 
-        } catch(erro){
-            res.status(500).json({message: erro})
-            return
-        }
-    }
+    //     } catch(erro){
+    //         res.status(500).json({message: erro})
+    //         return
+    //     }
+    // }
   
-    static async criarUsuarioInicial(req,res){
-
-        const senha = '123'
-
+    static async usuarioInicial(req,res){        
         const salt = bcrypt.genSaltSync(10)
-        const hashSenha = bcrypt.hashSync(senha,salt)
+        const hashSenha = bcrypt.hashSync('123',salt)
 
         const objUsuario = new Usuario({
-            _id: '1000',
+            _id: '1',
             nome: 'admin',
             senha: hashSenha,
             tipo: 1,
@@ -156,10 +149,9 @@ module.exports = class UsuarioControllers{
 
         try{
             await objUsuario.save()
-            res.json({message: 'usuario inicial adicionado'})
+            return res.json({message: 'usuario inicial adicionado, id: 1 , senha: 123'})
         } catch(erro){
-            res.json(erro)
+            return res.json({message: erro})
         }
     }
-
 }
