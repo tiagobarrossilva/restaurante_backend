@@ -59,8 +59,12 @@ module.exports = class ItemControllers{
     }
 
     static async consultarItens(req,res){
-        const itens = await Item.find().lean().select('-createdAt').select('-updatedAt').select('-__v')
-        return res.status(200).json({itens})
+        try{
+            const itens = await Item.find().lean().select('-createdAt').select('-updatedAt').select('-__v')
+            return res.status(200).json({itens})
+        } catch(error){
+            return res.status(400).json({message: error})
+        }
     }
     
 }

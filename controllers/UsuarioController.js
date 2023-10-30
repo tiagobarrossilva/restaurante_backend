@@ -5,10 +5,6 @@ const bcrypt = require('bcrypt')
 const createUserToken = require('../helpers/create-user-token')
 
 module.exports = class UsuarioControllers{
-    
-    // static verificarUsuarioLogado(req,res){
-    //     res.json(req.usuario)
-    // }
 
     static async adicionarUsuario(req,res){
         const id = req.body.id
@@ -17,24 +13,34 @@ module.exports = class UsuarioControllers{
         const tipo = req.body.tipo
 
         if(!id){
-            return res.status(404).json({message: 'informe o usuario'})
+            return res.status(404).json({message: 'Informe o usuario'})
         }
         if(!nome){
-            return res.status(404).json({message: 'informe o nome'})
+            return res.status(404).json({message: 'Informe o nome'})
         }
         if(!senha){
-            return res.status(404).json({message: 'informe a senha'})
+            return res.status(404).json({message: 'Informe a senha'})
         }
         if(!tipo || tipo == 0){
-            return res.status(404).json({message: 'informe o tipo'})
+            return res.status(404).json({message: 'Informe o tipo'})
+        }
+        
+        if(!isNaN(id)){
+            return res.status(500).json({message: 'A id não pode conter apenas números'})
+        }
+        if(tipo < 0 || tipo > 4 || isNaN(tipo)){
+            return res.status(500).json({message: 'Tipo invalido'})
         }
 
-        const usuarioExistente = await Usuario.findById(id).lean()
-
-        if(usuarioExistente){
-            return res.status(500).json({message: 'ja existe um usuario com essa id'})
+        try{
+            const usuarioExistente = await Usuario.findById(id).lean()
+            if(usuarioExistente){
+                return res.status(500).json({message: 'ja existe um usuario com essa id'})
+            }
+        } catch(error){
+            return res.status(400).json({message: error})
         }
-
+        
         const salt = bcrypt.genSaltSync(10)
         const hashSenha = bcrypt.hashSync(senha,salt)
 
@@ -48,7 +54,7 @@ module.exports = class UsuarioControllers{
         try{
             await objUsuario.save()
             return res.status(200).json({message: 'usuario adicionado'})
-        }catch(error){
+        } catch(error){
             return res.status(400).json({message: error})
         }
     }
@@ -60,7 +66,6 @@ module.exports = class UsuarioControllers{
         if(!id){
             return res.status(422).json({message: 'digite o id de usuario'})
         }
-
         if(!senha){
             return res.status(422).json({message: 'digite a senha'})
         }
@@ -68,7 +73,6 @@ module.exports = class UsuarioControllers{
         const usuarioExistente = await Usuario.findById(id)
 
         if(usuarioExistente){
-
             const verificarSenha = bcrypt.compareSync(senha, usuarioExistente.senha)
 
             if(verificarSenha){
@@ -98,7 +102,7 @@ module.exports = class UsuarioControllers{
     // }
 
     static async consultarTodosUsuarios(req,res){
-        const todosUsuarios = await Usuario.find().select('-senha')
+        const todosUsuarios = await Usuario.find().lean().select('-senha')
 
         if(todosUsuarios){
             res.json(todosUsuarios)

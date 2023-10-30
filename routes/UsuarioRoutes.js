@@ -8,10 +8,12 @@ const apenasAdministrador = require('../helpers/acesso-apenas-administrador')
 
 router.get('/novo',UsuarioController.usuarioInicial)
 router.post('/logar', UsuarioController.logarUsuario)
-router.post('/adicionar', UsuarioController.adicionarUsuario)
+
+router.post('/', UsuarioController.adicionarUsuario)
+router.get('/', UsuarioController.consultarTodosUsuarios)
 
 //router.get('/consultar/:id', UsuarioController.consultarUsuario)
-router.get('/consultar', UsuarioController.consultarTodosUsuarios)
+
 //router.patch('/editar/:id', UsuarioController.editarUsuario)
 //router.get('/verificarUsuarioLogado', UsuarioController.verificarUsuarioLogado)
 
