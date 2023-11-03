@@ -66,5 +66,26 @@ module.exports = class ItemControllers{
             return res.status(400).json({message: error})
         }
     }
+
+    static async excluirItem(req,res){
+        let id = req.params.id
+        id = parseInt(id)
+
+        if(isNaN(id)){
+            return res.status(400).json({message: 'Item invalido'})
+        }
+
+        try{
+            const itemExcluido = await Item.findByIdAndDelete({_id: id})
+            if(itemExcluido){
+                return res.status(200).json({message: 'Item removido do cardapio'})
+            } else{
+                return res.status(400).json({message: 'Ocorreu um erro ao remover o item'})
+            }
+            
+        } catch(error){
+            return res.status(400).json({message: error})
+        }
+    }
     
 }
