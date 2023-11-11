@@ -87,5 +87,34 @@ module.exports = class ItemControllers{
             return res.status(400).json({message: error})
         }
     }
+
+    // fazer validações e organizar
+    static async editarItem(req,res){
+        let id = req.params.id
+        id = parseInt(id)
+
+        
+        const nome = req.body.nome
+        const descricao = req.body.descricao
+        let preco = req.body.preco
+        let tipo = req.body.tipo
+
+        preco = parseInt(preco)
+        tipo = parseInt(tipo)
+
+        const itemAtualizacoes = {
+            nome,
+            descricao,
+            preco,
+            tipo
+        }
+        
+        
+
+        await Item.findByIdAndUpdate(id, itemAtualizacoes)
+
+        return res.status(200).json({message: 'Item atualizado'})
+
+    }
     
 }
