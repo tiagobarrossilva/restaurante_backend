@@ -87,29 +87,12 @@ module.exports = class UsuarioControllers{
         }
     }
 
-    // static async consultarUsuario(req,res){
-    //     const id = req.params.id
-
-    //     const usuarioExistente = await Usuario.findById(id).select('-senha')
-
-    //     if(usuarioExistente){
-    //         res.json(usuarioExistente)
-    //         return
-    //     } else{
-    //         res.json({message: 'usuario não encontrado'})
-    //         return
-    //     }
-    // }
-
     static async consultarTodosUsuarios(req,res){
-        const todosUsuarios = await Usuario.find().lean().select('-senha')
-
-        if(todosUsuarios){
-            res.json(todosUsuarios)
-            return
-        } else{
-            res.json({message: 'sem usuarios cadastrados'})
-            return
+        try{
+            const usuarios = await Usuario.find().lean().select('-senha').select('-createdAt').select('-updatedAt').select('-__v')
+            return res.status(200).json({usuarios})
+        } catch(erro){
+            return res.status(400).json({message: erro})
         }
     }
 
@@ -139,13 +122,30 @@ module.exports = class UsuarioControllers{
     //         return
     //     }
     // }
+
+    static async excluirUsuario(req,res){
+        const id = req.params.id
+        const idVerificado = id.toString()
+
+        try{
+            const usuario = await Usuario.findByIdAndDelete(idVerificado)
+            if(usuario){
+                return res.status(200).json({message: 'Usuario excluido'})
+            } else{
+                return res.status(200).json({message: 'Usuario não encontrado'})
+            }
+        } catch(erro){
+            return res.status(400).json({message: erro})
+        }
+
+    }
   
     static async usuarioInicial(req,res){        
         const salt = bcrypt.genSaltSync(10)
         const hashSenha = bcrypt.hashSync('123',salt)
 
         const objUsuario = new Usuario({
-            _id: '1',
+            _id: 'admin',
             nome: 'admin',
             senha: hashSenha,
             tipo: 1,

@@ -88,33 +88,63 @@ module.exports = class ItemControllers{
         }
     }
 
-    // fazer validações e organizar
     static async editarItem(req,res){
-        let id = req.params.id
-        id = parseInt(id)
-
-        
+        const id = req.params.id
         const nome = req.body.nome
         const descricao = req.body.descricao
-        let preco = req.body.preco
-        let tipo = req.body.tipo
+        const preco = req.body.preco
+        const tipo = req.body.tipo
 
-        preco = parseInt(preco)
-        tipo = parseInt(tipo)
+        if(!id){
+            return res.status(404).json({message: 'Codigo do item não informado'})
+        }
+        if(!nome){
+            return res.status(404).json({message: 'Informe o nome'})
+        }
+        if(!descricao){
+            return res.status(404).json({message: 'Informe a descrição'})
+        }
+        if(!preco){
+            return res.status(404).json({message: 'Informe o preço'})
+        }
+        if(!tipo){
+            return res.status(404).json({message: 'Informe o tipo'})
+        }
+
+        const idVerificado = parseInt(id)
+        const precoVerificado = parseFloat(preco)
+        const tipoVerificado = parseInt(tipo)
+
+        if(Number.isNaN(idVerificado)){
+            return res.status(404).json({message: 'id invalido'})
+        }
+        if(Number.isNaN(precoVerificado)){
+            return res.status(404).json({message: 'preço invalido'})
+        }
+        if(Number.isNaN(tipoVerificado)){
+            return res.status(404).json({message: 'preço invalido'})
+        }
+        if(tipoVerificado <=0 || tipoVerificado >4){
+            return res.status(404).json({message: 'preço invalido'})
+        }
 
         const itemAtualizacoes = {
             nome,
             descricao,
-            preco,
-            tipo
+            preco: precoVerificado,
+            tipo: tipoVerificado
         }
         
-        
-
-        await Item.findByIdAndUpdate(id, itemAtualizacoes)
-
-        return res.status(200).json({message: 'Item atualizado'})
-
+        try{
+            const item = await Item.findByIdAndUpdate(id, itemAtualizacoes)
+            if(item){
+                return res.status(200).json({message: 'Item atualizado'})
+            } else{
+                return res.status(200).json({message: 'erro ao atualizar o item'})
+            }
+        } catch(erro){
+            return res.status(200).json({message: erro})
+        }
     }
     
 }
