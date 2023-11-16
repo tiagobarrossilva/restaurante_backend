@@ -96,32 +96,38 @@ module.exports = class UsuarioControllers{
         }
     }
 
-    // static async editarUsuario(req,res){
-    //     const id = req.params.id
-    //     const nome = req.body.nome
-    //     const tipo = req.body.tipo
+    static async editarUsuario(req,res){
+        console.log('testando')
+        const id = req.params.id
+        const nome = req.body.nome
+        const tipo = req.body.tipo
 
-    //     const usuarioAtualizado = {nome,tipo}
+        if(!id){
+            return res.status(422).json({message: 'digite o id de usuario'})
+        }
+        if(!nome){
+            return res.status(422).json({message: 'digite o nome do usuario'})
+        }
+        if(!tipo){
+            return res.status(422).json({message: 'tipo não informado'})
+        }
+        if(tipo <=0 || tipo > 4){
+            return res.status(422).json({message: 'tipo invalido'})
+        }
 
-    //     try{
-    //         const objUsuario = await Usuario.findOneAndUpdate(
-    //             { _id: id },
-    //             { $set: usuarioAtualizado },
-    //             { new: true },
-    //             )
-    //         if(objUsuario){
-    //             res.json({message: 'usuario atualizado'})
-    //             return
-    //         } else{
-    //             res.status(200).json({objUsuario})
-    //             return
-    //         }
+        const usuarioAtualizado = {nome,tipo}
 
-    //     } catch(erro){
-    //         res.status(500).json({message: erro})
-    //         return
-    //     }
-    // }
+        try{
+            const objUsuario = await Usuario.findByIdAndUpdate(id,usuarioAtualizado)
+            if(objUsuario){
+                return res.json({message: 'usuario atualizado'})
+            } else{
+                return res.status(404).json({message: 'erro ao atualizar o usuario'})
+            }
+        } catch(erro){
+            return res.status(500).json({message: erro})
+        }
+    }
 
     static async excluirUsuario(req,res){
         const id = req.params.id

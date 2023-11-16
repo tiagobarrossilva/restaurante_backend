@@ -140,7 +140,7 @@ module.exports = class ItemControllers{
             if(item){
                 return res.status(200).json({message: 'Item atualizado'})
             } else{
-                return res.status(200).json({message: 'erro ao atualizar o item'})
+                return res.status(404).json({message: 'erro ao atualizar o item'})
             }
         } catch(erro){
             return res.status(200).json({message: erro})
