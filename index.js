@@ -21,7 +21,9 @@ app.use(express.static('public'))
 // rotas
 const UsuarioRoutes = require('./routes/UsuarioRoutes')
 const ItemRoutes = require('./routes/ItemRoutes')
+const VendaRoutes = require('./routes/VendaRoutes')
 app.use('/usuario',UsuarioRoutes)
 app.use('/item',ItemRoutes)
+app.use('/venda',VendaRoutes)
 
 app.listen(5000)
