@@ -133,6 +133,7 @@ module.exports = class VendaControllers{
         }
     }
 
+    // ainda não utilizado no front-end
     static async detalhesVenda(req,res){
         let mesa = req.params.mesa
         mesa = mesa.toString()
@@ -144,4 +145,29 @@ module.exports = class VendaControllers{
             return res.status(404).json({message: erro})
         }
     }
+
+    static async agurdandoPreparo(req,res){
+        let lista = []
+        let pedidos = []
+        try{
+            let vendasAbertas = await Venda.find({'situacao': 'aberta'}).lean().select('-createdAt').select('-updatedAt').select('-__v')
+            for(let i in vendasAbertas){
+                for(let i2 in vendasAbertas[i].pedidos){
+                    if(vendasAbertas[i].pedidos[i2].preparado == false){
+                        lista.push(vendasAbertas[i].pedidos[i2])
+                    }
+                }
+                const pedido = {
+                    mesa: vendasAbertas[i]._id,
+                    pedidos: lista 
+                }
+                pedidos.push(pedido)
+                lista = []
+            }
+            return res.status(200).json({pedidos})
+        } catch(erro){
+            return res.status(500).json({message: erro})
+        }
+    }
+
 }

@@ -9,4 +9,6 @@ router.get('/fechadas',VendaControllers.vendasFechadas)
 router.patch('/pedido/:mesa',VendaControllers.adicionarItemVenda)
 router.get('/pedido/:mesa',VendaControllers.detalhesVenda)
 
+router.get('/agurdando-preparo',VendaControllers.agurdandoPreparo)
+
 module.exports = router
