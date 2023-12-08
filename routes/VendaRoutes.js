@@ -10,5 +10,7 @@ router.patch('/pedido/:mesa',VendaControllers.adicionarItemVenda)
 router.get('/pedido/:mesa',VendaControllers.detalhesVenda)
 
 router.get('/agurdando-preparo',VendaControllers.agurdandoPreparo)
+router.patch('/confirmar-preparo/:idMesa/:idItem/:quantidade',VendaControllers.confirmarPreparo)
+router.patch('/reabrir-venda/:idMesa',VendaControllers.reabrirVenda)
 
 module.exports = router

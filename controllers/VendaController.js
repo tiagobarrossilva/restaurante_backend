@@ -170,4 +170,69 @@ module.exports = class VendaControllers{
         }
     }
 
+    static async confirmarPreparo(req,res){
+        let {idMesa,idItem,quantidade} = req.params
+        idMesa = parseInt(idMesa)
+        idItem = parseInt(idItem)
+        quantidade = parseInt(quantidade)
+        
+        let venda
+
+        try{
+            venda = await Venda.findById(idMesa)
+        } catch(erro){
+            return res.status(500).json({message: erro})
+        }
+
+        let itemAtualizado = false
+        let notificacaoNome
+        let notificacaoQuantidade
+
+        for(let i in venda.pedidos){
+            if(venda.pedidos[i]._id == idItem && venda.pedidos[i].quantidade == quantidade && venda.pedidos[i].preparado == false){
+                venda.pedidos[i].preparado = true
+                itemAtualizado = true
+                notificacaoNome = venda.pedidos[i].nome
+                notificacaoQuantidade = venda.pedidos[i].quantidade
+                break
+            }
+        }
+
+        if(!itemAtualizado){
+            return res.status(500).json({message: 'Ocorreu um erro'})
+        }
+
+        try{
+            await Venda.findByIdAndUpdate(idMesa,venda)
+            return res.status(200).json({message: 'preparado: '+notificacaoNome+' , '+' Quantidade:'+notificacaoQuantidade})
+
+        } catch(erro){
+            return res.status(500).json({message: erro})
+        }
+    }
+
+    static async reabrirVenda(req,res){
+        let idMesa = req.params.idMesa
+        idMesa = parseInt(idMesa)
+        let objVenda
+        try{
+            objVenda = await Venda.findById(idMesa)
+        } catch(erro){
+            return res.status(500).json({message: erro})
+        }
+        console.log(objVenda)
+        console.log('testando')
+        if(objVenda.situacao == 'fechada'){
+            objVenda.situacao = 'aberta'
+            try{
+                await Venda.findByIdAndUpdate(idMesa,objVenda)
+                return res.status(200).json({message: 'Venda reaberta'})
+            } catch(erro){
+                return res.status(500).json({message: erro})
+            }
+        } else{
+            return res.status(500).json({message: 'Ocorreu um erro'})
+        }
+    }
+
 }
