@@ -17,11 +17,6 @@ const verificarToken = (req,res,next) => {
     try{
         const tokenDecodificado = jwt.verify(token,'nossosecret')
         req.usuario = tokenDecodificado
-
-        // console.log('id'+req.usuario.id)
-        // console.log('tipo'+req.usuario.tipo)
-        // console.log(typeof(req.usuario.tipo))
-        
         next()
 
     } catch(erro){

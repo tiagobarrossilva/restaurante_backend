@@ -97,7 +97,6 @@ module.exports = class UsuarioControllers{
     }
 
     static async editarUsuario(req,res){
-        console.log('testando')
         const id = req.params.id
         const nome = req.body.nome
         const tipo = req.body.tipo

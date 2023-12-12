@@ -13,6 +13,10 @@ module.exports = class PagamentoControllers{
             return res.status(500).json({message: 'Ocorreu um erro'})
         }
 
+        console.log(req.usuario)
+
+        return res.status(200).json({message: 'testando'})
+
 
     }
 
