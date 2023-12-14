@@ -133,7 +133,6 @@ module.exports = class VendaControllers{
         }
     }
 
-    // ainda não utilizado no front-end
     static async detalhesVenda(req,res){
         let mesa = req.params.mesa
         mesa = mesa.toString()

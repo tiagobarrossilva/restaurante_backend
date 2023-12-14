@@ -6,9 +6,9 @@ const ItemController = require('../controllers/ItemController')
 const verificarToken = require('../helpers/verify-token')
 const apenasAdministrador = require('../helpers/acesso-apenas-administrador')
 
-router.post('/',ItemController.adicionarItem)
-router.get('/',ItemController.consultarItens)
-router.delete('/:id',ItemController.excluirItem)
-router.patch('/:id',ItemController.editarItem)
+router.post('/',verificarToken,apenasAdministrador, ItemController.adicionarItem)
+router.get('/',verificarToken,ItemController.consultarItens)
+router.delete('/:id',verificarToken,apenasAdministrador,ItemController.excluirItem)
+router.patch('/:id',verificarToken,apenasAdministrador,ItemController.editarItem)
 
 module.exports = router

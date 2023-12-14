@@ -6,17 +6,11 @@ const UsuarioController = require('../controllers/UsuarioController')
 const verificarToken = require('../helpers/verify-token')
 const apenasAdministrador = require('../helpers/acesso-apenas-administrador')
 
-router.get('/novo',UsuarioController.usuarioInicial)
+router.get('/novo',verificarToken,apenasAdministrador,UsuarioController.usuarioInicial)
 router.post('/logar', UsuarioController.logarUsuario)
-router.patch('/:id',UsuarioController.editarUsuario)
-router.delete('/:id', UsuarioController.excluirUsuario)
-router.post('/', UsuarioController.adicionarUsuario)
-router.get('/', UsuarioController.consultarTodosUsuarios)
-
-
-//router.get('/consultar/:id', UsuarioController.consultarUsuario)
-
-//router.patch('/editar/:id', UsuarioController.editarUsuario)
-//router.get('/verificarUsuarioLogado', UsuarioController.verificarUsuarioLogado)
+router.patch('/:id',verificarToken,apenasAdministrador,UsuarioController.editarUsuario)
+router.delete('/:id',verificarToken,apenasAdministrador, UsuarioController.excluirUsuario)
+router.post('/',verificarToken,apenasAdministrador, UsuarioController.adicionarUsuario)
+router.get('/',verificarToken, UsuarioController.consultarTodosUsuarios)
 
 module.exports = router
