@@ -5,7 +5,8 @@ const Pagamento = mongoose.model(
     'pagamento',
     new Schema({
         data: {type: Date, required:true},
-        caixa: {type: Number, required:true},
+        caixa: {type: String, required:true},
+        mesa: {type: Number, required:true},
         valor: {type: Number, required:true},
         venda: {type: Object, required:true}
     },
