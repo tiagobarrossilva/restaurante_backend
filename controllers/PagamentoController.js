@@ -40,6 +40,8 @@ module.exports = class PagamentoControllers{
             venda: objVenda
         })
 
+        console.log(objPagamento)
+
         try{
             await objPagamento.save()
             await Venda.findByIdAndDelete(idMesa)
