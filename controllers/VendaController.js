@@ -94,6 +94,44 @@ module.exports = class VendaControllers{
         }
     }
 
+    static async vendaFechada(req,res){
+        let mesa = req.params.mesa
+        mesa = parseInt(mesa)
+
+        let venda
+
+        try{
+            venda = await Venda.findById(mesa).select('-createdAt').select('-updatedAt').select('-__v')            
+        } catch(erro){
+            return res.status(500).json({message: erro})
+        }
+
+        if(!venda){
+            return res.status(500).json({message: 'Venda não encontrada'})
+        }
+
+        if(venda.situacao != 'fechada'){
+            return res.status(500).json({message: 'A venda ainda não foi finalizada'})
+        }
+
+        let precoTotal = 0
+        for(let i in venda.pedidos){
+            precoTotal = (venda.pedidos[i].preco * venda.pedidos[i].quantidade) + precoTotal
+        }
+
+        const objVenda = {
+            _id: venda._id,
+            abertura: venda.abertura,
+            fechamento: venda.fechamento,
+            precoTotal: precoTotal,
+            pedido: venda.pedidos
+        }
+
+        venda = objVenda
+
+        return res.status(200).json({venda})
+    }
+
     static async adicionarItemVenda(req,res){
         let mesa = req.params.mesa
         mesa = mesa.toString()

@@ -6,6 +6,7 @@ router.post('/abrir',VendaControllers.abrirVenda)
 router.post('/fechar',VendaControllers.fecharVenda)
 router.get('/abertas',VendaControllers.vendasAbertas)
 router.get('/fechadas',VendaControllers.vendasFechadas)
+router.get('/fechada/:mesa',VendaControllers.vendaFechada)
 router.patch('/pedido/:mesa',VendaControllers.adicionarItemVenda)
 router.get('/pedido/:mesa',VendaControllers.detalhesVenda)
 
