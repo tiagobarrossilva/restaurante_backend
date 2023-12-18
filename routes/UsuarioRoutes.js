@@ -10,7 +10,7 @@ router.get('/novo',verificarToken,apenasAdministrador,UsuarioController.usuarioI
 router.post('/logar', UsuarioController.logarUsuario)
 router.patch('/:id',verificarToken,apenasAdministrador,UsuarioController.editarUsuario)
 router.delete('/:id',verificarToken,apenasAdministrador, UsuarioController.excluirUsuario)
-router.post('/',verificarToken,apenasAdministrador, UsuarioController.adicionarUsuario)
+router.post('/',UsuarioController.adicionarUsuario)
 router.get('/',verificarToken, UsuarioController.consultarTodosUsuarios)
 
 module.exports = router

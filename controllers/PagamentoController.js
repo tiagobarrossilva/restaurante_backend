@@ -50,5 +50,30 @@ module.exports = class PagamentoControllers{
         return res.status(200).json({message: 'Pagamento realizado'})
     }
 
+    static async consultarPagamentos(req,res){
+        let data = req.body.data
+        data = '17/12/2023'
+        let objPagamentos
+        try{
+            objPagamentos = await Pagamento.find().lean().select('-createdAt').select('-updatedAt').select('-__v').select('-venda')
+        } catch(erro){
+            return res.status(500).json({message: erro})
+        }
+
+        //console.log(objPagamentos[1].data.toLocaleString().split(',')[0])
+
+        let pagamentosFiltrados = []
+
+        for(let i in objPagamentos){
+            if(objPagamentos[i].data.toLocaleString().split(',')[0] == data){
+                pagamentosFiltrados.push(objPagamentos[i])
+            }
+        }
+
+        console.log(pagamentosFiltrados)
+        
+        return res.status(200).json({pagamentosFiltrados})
+    }
+
     
 }
