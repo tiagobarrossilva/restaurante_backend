@@ -7,6 +7,6 @@ const verificarToken = require('../helpers/verify-token')
 const apenasAdministrador = require('../helpers/acesso-apenas-administrador')
 
 router.post('/',verificarToken,PagamentoControllers.receberPagamento)
-router.get('/',PagamentoControllers.consultarPagamentos)
+router.get('/:data',PagamentoControllers.consultarPagamentos)
 
 module.exports = router

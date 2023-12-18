@@ -51,8 +51,12 @@ module.exports = class PagamentoControllers{
     }
 
     static async consultarPagamentos(req,res){
-        let data = req.body.data
-        data = '17/12/2023'
+        let data = req.params.data
+
+        data = data.toLocaleString()
+        data = data.split('-')
+        data = data[2]+'/'+data[1]+'/'+data[0]
+        
         let objPagamentos
         try{
             objPagamentos = await Pagamento.find().lean().select('-createdAt').select('-updatedAt').select('-__v').select('-venda')
@@ -70,10 +74,49 @@ module.exports = class PagamentoControllers{
             }
         }
 
-        console.log(pagamentosFiltrados)
-        
-        return res.status(200).json({pagamentosFiltrados})
+        let caixas = []
+        let encontrado
+        for(let i in pagamentosFiltrados){
+            encontrado = false
+            for(let i2 in caixas){
+                if(pagamentosFiltrados[i].caixa == caixas[i2]){
+                    encontrado = true
+                    break
+                }
+            }
+            if(!encontrado){
+                caixas.push(pagamentosFiltrados[i].caixa)
+            }
+        }
+
+        let total
+        let pagamentos = []
+        for(let i in caixas){
+            total = 0
+            for(let i2 in pagamentosFiltrados){
+                if(caixas[i] == pagamentosFiltrados[i2].caixa){
+                    total = total + pagamentosFiltrados[i2].valor
+                }
+            }
+
+            // consultar nome do operador de caixa no banco de dados
+            let usuario
+            try{
+                usuario = await Usuario.findById(caixas[i]).lean().select('-senha').select('-createdAt').select('-updatedAt').select('-__v')
+            } catch(erro){
+                return res.status(500).json({message: erro})
+            }
+
+            usuario = usuario.nome
+            
+            const pagamento = {
+                caixa: caixas[i],
+                nome: usuario,
+                valor: total
+            }
+            pagamentos.push(pagamento)
+        }
+        return res.status(200).json({pagamentos})
     }
 
-    
 }
